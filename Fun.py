@@ -51,7 +51,7 @@ def BetaMatrices(Ap,n):
 
 					else:
 
-						Matrix[i-k][j-k]+=(1/math.comb(n,l))*Ap[l]*Beta(i,j,k,t,n)
+						Matrix[i-k][j-k]+=(1/math.comb(n,l))*Ap[l]*Beta(i,j,k,t,n)*(math.comb(n-2*k,i-k)*math.comb(n-2*k,j-k))**(-0.5)
 
 		BMatrix.append(Matrix)
 
@@ -59,28 +59,29 @@ def BetaMatrices(Ap,n):
 
 
 def GammaTilde(Ap,n):
+	
+	Generators=list(range(0,n))
+	
+	Elements=[]
+	
+	for i in range(n+1):
+		Elements += (list(itertools.combinations(Generators, i)))
+	
+	Elements_R={new_label:old_label for old_label, new_label in enumerate(Elements)}
 
-	BMatrix=[]
+	GTilde=[[0]*(2**n) for _ in range(2**n)]
+	
+	for S in Elements:
+		for T in Elements:
 
-	for k in range(0,int(n/2)+1):
+			i=len(S)
+			j=len(T)
+			t=len(tuple(set(S) & set(T)))
+			
+			l=i+j-2*t
+			
+			GTilde[Elements_R[S]][Elements_R[T]]=(1/math.comb(n,l))*Ap[l]
 
-		Matrix=[[0]*(n-2*k+1) for _ in range(n-2*k+1)]
+	return GTilde
 
-		for i in range(k,n-k+1):
-			for j in range(k,n-k+1):
-				for t in range(n+1):
-
-					l=i+j-2*t
-
-					if l>n or t>i or t>j:
-
-						Matrix[i-k][j-k]+=0
-
-					else:
-
-						Matrix[i-k][j-k]+=(1/math.comb(n,l))*Ap[l]*Beta(i,j,k,t,n)
-
-		BMatrix.append(Matrix)
-
-	return BMatrix
 
