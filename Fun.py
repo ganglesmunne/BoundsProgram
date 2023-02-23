@@ -41,7 +41,7 @@ def BetaMatrices(Ap,n):
 
 			else:
 
-				Matrix[i-k][j-k]+=(1/comb(n,l))*Ap[l]*Beta(i,j,k,t,n)*(comb(n-2*k,i-k)*comb(n-2*k,j-k))**(-0.5)
+				Matrix[i-k][j-k]+=(1/comb(n,l))*Ap[l]*Beta(i,j,k,t,n)*(comb(n-2*k,i-k)*comb(n-2*k,j-k))**(-1/2)
 
 		BMatrix.append(Matrix)
 
