@@ -2,7 +2,7 @@ import numpy as np
 import itertools
 import picos as pic
 import cvxopt as cvx
-from scipy.special import comb
+from scipy.special import comb as comb_s
 
 def K_fun(m,k,n):
 
@@ -11,6 +11,12 @@ def K_fun(m,k,n):
 	for q in range(0,m+1):
 		Fun+= comb(n-k,m-q)*comb(k,q)*(-1)**q
 	return Fun 
+
+def comb(n,k):
+
+	value=comb_s(n,k,exact=True)
+
+	return value
 
 
 def Beta(i,j,k,t,n):
@@ -40,8 +46,8 @@ def BetaMatrices(Ap,n):
 				Matrix[i-k][j-k]+=0
 
 			else:
-
-				Matrix[i-k][j-k]+=(1/comb(n,l))*Ap[l]*Beta(i,j,k,t,n)*(comb(n-2*k,i-k)*comb(n-2*k,j-k))**(-1/2)
+				const=(1/comb(n,l))*Beta(i,j,k,t,n)*(comb(n-2*k,i-k)*comb(n-2*k,j-k))**(-1/2)
+				Matrix[i-k][j-k]+=const*Ap[l]
 
 		BMatrix.append(Matrix)
 
