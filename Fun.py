@@ -4,6 +4,13 @@ import picos as pic
 import cvxopt as cvx
 from scipy.special import comb as comb_s
 
+
+def Swap_multiplication(A,B):
+
+	C = tuple(set(A)^set(B))
+
+	return C 
+        
 def K_fun(m,k,n):
 
 	Fun=0
@@ -79,4 +86,98 @@ def GammaTilde(Ap,n):
 
 	return GTilde
 
+
+def Gamma(AS,n,aver,weigths):
+	
+	T=2**n
+		
+	F=np.zeros((T, T))
+
+	F[0]=AS
+
+	Generators=list(range(0, n))
+
+	Elements=[]
+
+	for i in range(n+1):
+		Elements += (list(itertools.combinations(Generators, i)))
+	   
+	Elements_R={new_label:old_label for old_label, new_label in enumerate(Elements)}
+
+	rho=[]
+
+	length=0
+	
+	Rep=[]
+
+	for i in range(T):
+		for j in range(T):
+			C=Swap_multiplication(Elements[i],Elements[j])
+			Rep.append([C,i,j])  
+
+	Rep=sorted(Rep)
+
+	for rep in Rep:
+		if rep==Rep[0]:  
+
+			rep_old=rep.copy()
+
+		else:
+
+			if set(rep[0])==set(rep_old[0]):
+				
+				F[rep[1],rep[2]]=F[rep_old[1],rep_old[2]]
+			else:
+				rep_old=rep.copy()
+		
+	if aver==True:
+		
+		F_Tilde=np.zeros([2**n,2**n])
+		
+		for X in Elements:
+			for Y in Elements:
+
+				i=len(X)
+				j=len(Y)
+				t=len(tuple(set(X) & set(Y)))
+				l=i+j-2*t
+				
+				suma=0
+
+				for S in Elements:
+					for T in Elements:
+
+						Inter=tuple(set(S) & set(T))
+
+						if len(S)==i and len(T)==j and len(Inter)==t:
+
+							suma+=F[Elements_R[S],Elements_R[T]]
+
+				F_Tilde[Elements_R[X]][Elements_R[Y]]=1/(comb(n,l)*comb(n-l,t)*comb(l,j-t))*suma	
+	else:
+		F_Tilde=None
+
+	if weigths==True:
+		
+		Aj=np.zeros(n+1)
+		
+		
+		Aj[0]=AS[0]
+		
+		for X in Elements:
+			i=len(X)
+			
+			if i==0: 
+				Aj[0]=AS[Elements_R[X]]
+			elif i == ip:
+				Aj[i]+=AS[Elements_R[X]]
+			else:
+				Aj[i]=AS[Elements_R[X]]
+			ip=i
+	else:
+		Aj=None
+		
+	return F,F_Tilde,Aj
+
+	
 

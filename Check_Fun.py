@@ -1,8 +1,14 @@
 import Fun as f
 import numpy as np
 from termcolor import colored
+import itertools
 
-#### Check Identity maps to Identity ####
+
+#############################################
+#                                           #
+####   Check Identity maps to Identity 	 ####
+#                                           #
+#############################################
 
 
 #### Check Gamma tilde is the idenity ####
@@ -51,10 +57,19 @@ else:
 	print("Id_gamma <-> Id_beta: ", colored('False', 'red', attrs=['bold']))
 
 
+
+#############################################
+#                                           #
+### Minum eigenvalue of the Beta matrices ###
+#                                           #
+#############################################
+
+
+n=9
+
 #### Check minimum eigenvalue ####
 
 Ap=np.random.rand(n+1) # Random selection of Ap
-
 
 ### Minimum eigenvalue of Gamma tilde ###
 
@@ -67,9 +82,6 @@ Diag.sort()
 MinEig_Gamma=Diag[0] 
 
 M=f.BetaMatrices(Ap,n)
-
-
-### Minum eigenvalue of the Beta matrices ###
 
 MinEig_Beta=np.inf
 
@@ -91,3 +103,55 @@ if np.round(MinEig_Beta,9) == np.round(MinEig_Gamma,9):
 else:
 	
 	print("Min eig gamma = Min eig beta: ", colored('False', 'red', attrs=['bold']))
+
+
+
+#############################################
+#                                           #
+###      Check if Betas are symetric      ###
+#                                           #
+#############################################
+
+
+n=31
+k=0
+
+s=0
+
+for i,j,t in itertools.product(range(n+1),range(n+1),range(n+1)):
+	if f.Beta(i,j,k,t,n) !=  f.Beta(j,i,k,t,n):
+		s=1
+		break
+
+if s==0:
+
+	print("Symetric Beta: ", colored('True', 'green', attrs=['bold']))
+
+else:
+
+	print("Symetric Beta: ", colored('False', 'red', attrs=['bold']))
+
+
+#############################################
+#                                           #
+###   Check mapping Gamma -> Gamma_tilde  ###
+#                                           #
+#############################################
+
+n=6
+
+AS=np.random.rand(2**n)
+
+Gamma,Gamma_tilde,Aj=f.Gamma(AS,n,True,True)
+
+Gamma_tilde2=np.array(f.GammaTilde(Aj,n))
+
+if np.allclose(Gamma_tilde,Gamma_tilde2)==True:
+
+	print("Same Gamma_tilde: ", colored('True', 'green', attrs=['bold']))
+
+else:
+
+	print("Same Gamma_tilde: ", colored('False', 'red', attrs=['bold']))
+
+
