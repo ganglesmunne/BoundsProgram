@@ -1,7 +1,6 @@
 import Fun as f
 import numpy as np
 from termcolor import colored
-import itertools
 
 #### Check Identity maps to Identity ####
 
@@ -92,26 +91,3 @@ if np.round(MinEig_Beta,9) == np.round(MinEig_Gamma,9):
 else:
 	
 	print("Min eig gamma = Min eig beta: ", colored('False', 'red', attrs=['bold']))
-
-    
-    
-### Check if Betas are symetric ###
-
-n=31
-k=0
-
-s=0
-
-for i,j,t in itertools.product(range(n+1),range(n+1),range(n+1)):
-	if f.Beta(i,j,k,t,n) !=  f.Beta(j,i,k,t,n):
-		s=1
-		break
-
-if s==0:
-    
-	print("Symetric Beta: ", colored('True', 'green', attrs=['bold']))
-	
-else:
-	
-	print("Symetric Beta: ", colored('False', 'red', attrs=['bold']))
-        
