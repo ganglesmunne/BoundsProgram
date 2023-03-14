@@ -132,6 +132,7 @@ def Gamma(AS,n,aver,weigths):
 		
 	if aver==True:
 		
+		"""
 		F_Tilde=np.zeros([2**n,2**n])
 		
 		for X in Elements:
@@ -153,7 +154,41 @@ def Gamma(AS,n,aver,weigths):
 
 							suma+=F[Elements_R[S],Elements_R[T]]
 
-				F_Tilde[Elements_R[X]][Elements_R[Y]]=1/(comb(n,l)*comb(n-l,t)*comb(l,j-t))*suma	
+				F_Tilde[Elements_R[X]][Elements_R[Y]]=1/(comb(n,l)*comb(n-l,t)*comb(l,j-t))*suma
+		"""
+		
+		F_Tilde=np.zeros([2**n,2**n])
+		
+		
+		for X in Elements:
+			for Y in Elements:
+				
+				suma=0
+				
+				for perm in itertools.permutations(Generators):
+					
+					fun_perm={new_label:old_label for old_label, new_label in enumerate(perm)}
+					
+					Xp=list(X)
+					Yp=list(Y)
+					
+					for i in range(len(X)):
+						
+						Xp[i]=fun_perm[X[i]]
+						
+					for i in range(len(Y)):
+						
+						Yp[i]=fun_perm[Y[i]]
+					
+					Xp.sort()
+					Yp.sort()
+					Xp=tuple(Xp)
+					Yp=tuple(Yp)
+					
+					suma+=F[Elements_R[Xp]][Elements_R[Yp]]
+			
+				F_Tilde[Elements_R[X]][Elements_R[Y]]=suma/np.math.factorial(n)
+		
 	else:
 		F_Tilde=None
 
@@ -178,6 +213,3 @@ def Gamma(AS,n,aver,weigths):
 		Aj=None
 		
 	return F,F_Tilde,Aj
-
-	
-
